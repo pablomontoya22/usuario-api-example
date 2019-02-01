@@ -8,7 +8,7 @@ h2 {
 	color:#FF0000;
 }
 
-a:active, a:hover {
+.navbar a:active, .navbar a:hover {
 	box-shadow: 0px 0px 44px #e9e9e9cc inset, 0px 0px 5px aliceblue;
 	border-radius: 6px;
 }
@@ -20,150 +20,57 @@ a.active {
 	border-radius: 6px;
 }
 
-.bg-light {
-    box-shadow: 1px 1px 70px #64bdfe inset;
+nav.bg-light {
+    background-color: #006bd7 !important
 }
 
 .container {
 	padding-top: 2em;
 }
 
-.post {
-	margin-bottom: 2em;
-	border: 1px solid gray;
-	padding: 1em;
-	border-radius: 6px;
-	background-color: #edf4ff;
-	cursor: pointer;
-}
-
-.post .post-detail {
-    margin-bottom: 2em;
-    border: 1px solid gray;
-    padding: 1em;
-    border-radius: 6px;
-    background-color: #edf4ff;
-    cursor: pointer;
-}
-
-.post:hover {
-    box-shadow: 0px 0px 5px gray inset;
-}
-
-.post-content{
-    border: 1px solid gray;
-    min-height: 5em;
-    border-radius: 4px;
-    padding: .5em .8em;
-    box-shadow: 0px 0px 10px inset lightgray, 0px 0px 10px #c3c3c3;
-    font-style: italic;
-}
-
-.like-link {
-	font-weight: bold;
-	color: blue !important;
-	cursor: pointer;
-	font-size: .93em;
-}
-
-.like-counter {
-	font-size: 0.8em;
-	font-weight: bold;
-	color: #272727;
-}
-
-.post .like-counter {
-	margin: 5px 0px 2px 0px;
-}
-
-.post-detail .like-counter {
-    margin: 9px 0 9px 2px;
-}
-
-.post:hover .post-content {
-    box-shadow: 0px 0px 30px inset #dedede;
-}
-
-.img-frame {
-    display: inline-block;
-    width: 70px;
-    overflow: hidden;
-    border-radius: 5px;
-    box-shadow: 0px 0px 3px #2a2a2a;
-    height: 50px;
-}
-
-.img-frame img {
-    height: 50px;
-}
-
-.post-header {
-	padding: 0.7em 1em;
-}
-
-.post-title {
-	font-size: 1.5em;32px
-	height: 1.15em;
-}
-
-.post-description {
-	padding-left: .8em;
-	width: 86%;
-}
-
-.author {
-    font-size: .85em;
-    color: #625c5c;
-    font-weight: bold;
-    margin-top: -6px;
-}
-
-#users-list .form-group {
+#sidebar-menu ul {
+    padding-left: 0;
+    background-color: #b6b6b6;
     margin-bottom: 0;
-    margin-top: 12px;
 }
 
-.user {
-    font-style: italic;
-    color: grey;
+#sidebar-menu li {
+    list-style-type: none;
+    padding: 4% 0 4% 6%;
 }
 
-.title {
-    font-weight: bold;
+#sidebar-menu a {
+    padding: 4% 0 4% 3%;
 }
 
-.content-cut {
-    font-size: .9em;
-}
-
-a.like-link:hover {
-    box-shadow: 0px 0px 8px grey, 0px 0px 1px white inset;
-}
-
-a.like-link {
-    background-color: dodgerblue;
-    color: white !important;
-    border: 1px solid #4e4e4e;
-    padding: 4px 6px;
+#sidebar-menu a:hover {
+    background-color: #51acdd;
     border-radius: 5px;
 }
 
-.post div.like-counter > span {
-    margin-right: 10px;
+#sidebar-menu li:hover {
+    background-color: gray;
+    color: white;
+    box-shadow: 0px 0px 9px #6f6f6f inset;
 }
 
-.date {
-    margin-left: 50%;
-    font-weight: normal;
-    color: #5a5a5a;
+#sidebar-menu a, #sidebar-menu li {
+	cursor: pointer;
+	display: inline-block;
+	width: 100%;
 }
 
-.see-more:hover {
-	color: black !important;
+#sidebar-menu {
+    padding: 5%;
 }
 
-.see-more {
-    font-weight: bolder;
-    font-size: .95em;
-    color: #1272ae;
+#sidebar {
+    width: 14%;
+    height: 100%;
+    max-height: 100%;
+    position: fixed;
+    top: 56px;
+    z-index: 999;
+    background-color: #d7e1ea;
+    box-shadow: 0px 1px 5px;
 }
