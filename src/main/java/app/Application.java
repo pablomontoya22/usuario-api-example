@@ -1,11 +1,10 @@
 package app;
 
-/*import java.util.ArrayList;
-import java.util.List;*/
+import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
 
-//import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -14,24 +13,24 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
-/*import app.entities.Like_;
-import app.entities.Post;
-import app.entities.User;
-import app.repositories.LikeRepository;
-import app.repositories.PostRepository;
-import app.repositories.UserRepository;*/
+import app.entities.Client;
+import app.entities.Concessionaire;
+import app.entities.State;
+import app.repositories.ClientRepository;
+import app.repositories.ConcessionaireRepository;
+import app.repositories.StateRepository;
 
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
-	/*@Autowired
-	private UserRepository userRepository;
+	@Autowired
+	private StateRepository stateRepository;
 
 	@Autowired
-	private PostRepository postRepository;
+	private ClientRepository clientRepository;
 
 	@Autowired
-	private LikeRepository likeRepository;*/
+	private ConcessionaireRepository concessionaireRepository;
 
 	@Override
 	protected SpringApplicationBuilder
@@ -52,43 +51,64 @@ public class Application extends SpringBootServletInitializer {
     @Transactional
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
-    	/*String[][] defaultUsers = new String[][] {
-    		{"Ana", "Garcia", "https://www.webconsultas.com/sites/default/"
-    				+ "files/styles/encabezado_articulo/public/migrated/"
-    				+ "caracteristicas-timidez.jpg"},
-    		{"Jorge", "Lozada", "https://www.vbout.com/images/persona/"
-    				+ "buyer-persona-image1.png"},
-    		{"Felipe", "Oropeza", "https://previews.123rf.com/images/grgroup/"
-    				+ "grgroup1611/grgroup161108917/65491764-icono-de-dibujos-animados"
-    				+ "-chico-ni%C3%B1ez-ni%C3%B1o-peque%C3%B1o-persona-personas"
-    				+ "-y-el-tema-dise%C3%B1o-aislado-ilustraci%C3%B3n-vectorial.jpg"},
-    		{"Roberto", "Muñoz", "https://cdn-images-1.medium.com/max/1200/"
-    				+ "1*XKpA4-JcY06QcMOiPB1zaQ.jpeg"},
-    		{"Eduardo", "Alvarado", "https://www.lacasaencendida.es/sites/default/files/"
-    				+ "styles/full/public/primera_persona_2017_carlos_zanon_nt.jpg?itok=WDqEa7R4"},
-    		{"Carolina", "Escalona", "http://www.medicinahiperbarica.com.mx/wp-content/"
-    				+ "uploads/2015/11/persona-png.png"}};
-        if (!userRepository.findAll().iterator().hasNext()) {
-        	for (String[] user : defaultUsers)
-        		userRepository.save(new User(user[0], user[1], user[2]));
-        }
-        Object[][] defaultPosts = new Object[][] {
-        	{1L, "Hola Mundo!",
-        		"Este es un post generado al início de la aplicación.", new Long[]{2L, 3L}},
-        	{5L, "Hola Mundo de Eduardo!",
-        			"Este es un post generado al início de la aplicación Eduardo.",
-        			new Long[]{2L, 3L, 6L}}};
-    	List<Like_> likes;
-        Post postLoop;
-        for (Object[] post : defaultPosts) {
-        	likes = new ArrayList<Like_>(0);
-        	postLoop = postRepository.save(new Post(userRepository.findById((Long) post[0]).get(),
-        			post[1].toString(), post[2].toString()));
-        	for (Long idUser : (Long [])post[3])
-        		likes.add(likeRepository.save(new Like_(userRepository.findById(idUser).get(), postLoop)));
-        	postLoop.setLikes(likes);
-        	postRepository.save(postLoop);
-        }*/
+    	String[] states = new String[] {"Amazonas", "Anzoátegui", "Apure", "Aragua",
+			"Barinas", "Bolívar", "Carabobo", "Cojedes", "Delta Amacuro",
+			"Distrito Capital", "Falcón", "Guárico", "Lara", "Mérida", "Miranda",
+			"Monagas", "Nueva Esparta", "Portuguesa", "Sucre", "Táchira", "Trujillo",
+			"Vargas", "Yaracuy", "Zulia", "Dependencias Federales"};
+    	String [][] defaultClients = new String [][] {
+    		{"Pedro", "Perez", "V-1000", "pedro@automovil.com"},
+    		{"Maria", "Lopez", "V-2000", "maria@automovil.com"},
+    		{"Juan", "Gomez", "V-3000", "juan@automovil.com"},
+    		{"Jose", "Jimenez", "V-4000", "jose@automovil.com"} };
+    	State caracas = null, maracay = null, teques = null;
+    	Concessionaire concessionaire;
+    	int i = 0;
+    	for (String name : states)
+    		switch (name) {
+	    		case "Distrito Capital":
+	    			caracas = stateRepository.save(new State(name));
+	    			break;
+	    		case "Aragua":
+	    			maracay = stateRepository.save(new State(name));
+	    			break;
+	    		case "Miranda":
+	    			teques = stateRepository.save(new State(name));
+	    			break;
+	    		default:
+	    			stateRepository.save(new State(name));
+    		}
+    	for (State state : new State[]{caracas, maracay, teques}) {
+    		concessionaire = new Concessionaire();
+    		concessionaire.setAddress("Centro");
+    		concessionaire.setState(state);
+    		concessionaire.setClients(new ArrayList<Client>(0));
+    		concessionaire = concessionaireRepository.save(concessionaire);
+    		switch (concessionaire.getState().getName()) {
+	    		case "Distrito Capital":
+	    			concessionaire.getClients().add(clientRepository.save(
+	    					new Client(defaultClients[i][0], defaultClients[i][1],
+	    	    					defaultClients[i][2], defaultClients[i++][3],
+	    	    					concessionaire)));
+	    			concessionaire.getClients().add(clientRepository.save(
+	    					new Client(defaultClients[i][0], defaultClients[i][1],
+	    	    					defaultClients[i][2], defaultClients[i++][3],
+	    	    					concessionaire)));
+	    			break;
+	    		case "Aragua":
+	    			concessionaire.getClients().add(clientRepository.save(
+	    					new Client(defaultClients[i][0], defaultClients[i][1],
+	    							defaultClients[i][2], defaultClients[i++][3],
+	    							concessionaire)));
+	    			break;
+	    		case "Miranda":
+	    			concessionaire.getClients().add(clientRepository.save(
+	    					new Client(defaultClients[i][0], defaultClients[i][1],
+	    	    					defaultClients[i][2], defaultClients[i++][3],
+	    	    					concessionaire)));
+			}
+    		concessionaireRepository.save(concessionaire);
+    	}
         System.out.
     	println("***************** Corriendo SPRING BOOT APP *****************");
     }

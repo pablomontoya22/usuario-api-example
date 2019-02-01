@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Client {
 	@Id
@@ -22,10 +24,25 @@ public class Client {
 	private String DNI;
 	@Email(message = "Email should be valid")
 	private String email;
+	@JsonIgnore
+	@NotNull(message = "Concessionaire can't be empty")
 	@ManyToOne(fetch = FetchType.LAZY)
     private Concessionaire concessionaire;
 
 	public Client() {}
+
+	public Client(@NotNull(message = "Name can't be empty") String name,
+			@NotNull(message = "Last name can't be empty") String surname,
+			@NotNull(message = "DNI can't be empty") String dNI,
+			@Email(message = "Email should be valid") String email,
+			@NotNull(message = "Concessionaire can't be empty") Concessionaire concessionaire) {
+		super();
+		this.name = name;
+		this.surname = surname;
+		DNI = dNI;
+		this.email = email;
+		this.concessionaire = concessionaire;
+	}
 
 	public Long getId() {
 		return id;

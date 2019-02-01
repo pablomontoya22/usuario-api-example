@@ -19,13 +19,14 @@ public class Concessionaire {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@NotNull(message = "Last name can't be empty")
+	@NotNull(message = "Address can't be empty")
 	private String address;
-	@OneToOne(fetch = FetchType.LAZY)
+	@NotNull(message = "State can't be empty")
+	@OneToOne(fetch = FetchType.EAGER)
     @MapsId
 	private State state;
 	@OneToMany(mappedBy = "concessionaire", cascade = CascadeType.ALL)
-    private List<Client> comments = new ArrayList<Client>();
+    private List<Client> clients = new ArrayList<Client>();
 
 	public Concessionaire() {}
 
@@ -53,12 +54,12 @@ public class Concessionaire {
 		this.state = state;
 	}
 
-	public List<Client> getComments() {
-		return comments;
+	public List<Client> getClients() {
+		return clients;
 	}
 
-	public void setComments(List<Client> comments) {
-		this.comments = comments;
+	public void setClients(List<Client> clients) {
+		this.clients = clients;
 	}
 
 }

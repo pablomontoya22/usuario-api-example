@@ -16,6 +16,11 @@ public class State {
 
 	public State() {}
 
+	public State(@NotNull(message = "Name can't be empty") String name) {
+		super();
+		this.name = name;
+	}
+
 	public Long getId() {
 		return id;
 	}
