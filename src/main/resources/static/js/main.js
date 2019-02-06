@@ -1,4 +1,4 @@
-var postId, userId;
+var postId, userId, menuItems = $("#sidebar-menu a");
 var dialog = $("#users-list").dialog({
 	title: "Seleccionar usuario",
     autoOpen: false,
@@ -36,13 +36,7 @@ var dialog = $("#users-list").dialog({
     }
 });
 
-$(".like-link").click(function(event) {
-	event.stopPropagation();
-	postId = $(this).attr('id');
-	dialog.dialog("open");
-});
-
-$("div.post").click(function() {
-	postId = $(this).attr('id').replace("post-", "");
-	window.location.href = "/posts/" + postId;
+menuItems.click(function() {
+	menuItems.removeClass("active");
+	$(this).addClass("active");
 });
