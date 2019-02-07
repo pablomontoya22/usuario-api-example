@@ -24,7 +24,7 @@ import app.repositories.ClientRepository;
 public class ClientController extends Utilities {
 
 	@Autowired
-	private ClientRepository r;
+	protected ClientRepository r;
 
 	@GetMapping(value = "/{id}")
 	private Response get(@PathVariable("id") Long id) {

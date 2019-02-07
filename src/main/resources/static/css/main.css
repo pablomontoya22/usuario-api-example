@@ -10,6 +10,14 @@ h2 {
 
 div#main {
 	margin-left: 13.5%;
+	padding: 1em;
+}
+
+div#main h1 {
+	border-bottom: 1px solid #b4b4b4;
+	font-weight: normal;
+	font-size: 2.4em;
+	padding-left: .1em;
 }
 
 .navbar a:active, .navbar a:hover {
