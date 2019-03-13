@@ -11,7 +11,8 @@
 	        		<th><spring:message code="client.list.name"/></th>
 	        		<th><spring:message code="client.list.surname"/></th>
 	        		<th><spring:message code="client.list.DNI"/></th>
-	        		<th><spring:message code="client.list.email"/></th>	
+	        		<th><spring:message code="client.list.email"/></th>
+	        		<th><spring:message code="client.list.actions"/></th>
 	       		</tr>
        		</thead>
        		<tbody>
@@ -28,6 +29,11 @@
 	      			<td>${client.surname}</td>
 	      			<td>${client.DNI}</td>
 	      			<td>${client.email}</td>
+	      			<td>
+	      				<span class="show"></span>
+	      				<span class="edit"></span>
+	      				<span class="delete"></span>
+      				</td>
 	      		</tr>
 		        		</c:forEach>
 		        	</c:otherwise>

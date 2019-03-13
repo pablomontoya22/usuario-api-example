@@ -5,6 +5,7 @@
 <html>
 	<head>
 		<meta charset="utf-8"/>
+		<link rel="shortcut icon" type="image/x-icon" href="/images/car.png" />
 		<c:url value="/css/main.css" var="jstlCss"/>
 		<link href="${jstlCss}" rel="stylesheet"/>
 		<link href="/css/jquery-ui.min.css" rel="stylesheet">
