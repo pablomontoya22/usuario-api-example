@@ -92,9 +92,19 @@ a.navbar-brand {
     width: 13.5%;
     height: 100%;
     max-height: 100%;
-    position: fixed;
+    position: absolute;
     top: 56px;
     z-index: 999;
     background-color: #d7e1ea;
     box-shadow: 0px 1px 5px;
+    min-width: 6em;
+}
+
+[type="search"] {
+    -webkit-appearance: textfield !important;
+}
+
+#clients_wrapper {
+	width: 96%;
+	margin: auto;
 }

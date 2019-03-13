@@ -40,3 +40,7 @@ menuItems.click(function() {
 	menuItems.removeClass("active");
 	$(this).addClass("active");
 });
+
+$(document).ready(function() {
+	$('#clients').addClass('display').DataTable();
+});
