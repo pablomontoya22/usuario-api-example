@@ -1,7 +1,7 @@
 # task-api-example
 
 ### Run with H2 database
-This API has implemented with H2 embedded, H2 is simple database to make tests, H2 is working in memory, when you shutdown, the new data will lost.
+This API has implemented with H2 embedded, H2 is a simple database to make tests, H2 is working in memory, when you shutdown, the new data will lost.
 
 ### Run with MySQL database
 If you want to use MySQL, you need to execute these SQL sentences:
