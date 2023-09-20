@@ -2,6 +2,7 @@ package app.handlers;
 
 import java.util.stream.Collectors;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,7 +16,6 @@ import app.helpers.Response;
 
 @ControllerAdvice
 public class HttpErrorsHandler {
-
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseBody
@@ -26,10 +26,17 @@ public class HttpErrorsHandler {
 	    return new Response(HttpStatus.BAD_REQUEST, errors);
 	}
 
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(EmptyResultDataAccessException.class)
+	@ResponseBody
+	public Object handleInternalNotFoundExceptions(final Exception e) {
+	    return new Response(HttpStatus.NOT_FOUND, Messages.NOT_FOUND);
+	}
+
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
 	public Object handleInternalServerErrorExceptions(final Exception e) {
-	    return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Messages.ERROR.toString());
+	    return new Response(HttpStatus.INTERNAL_SERVER_ERROR, Messages.ERROR);
 	}
 }

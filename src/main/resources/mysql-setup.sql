@@ -1,3 +1,11 @@
+CREATE DATABASE taskdb;
+
+CREATE USER 'usertask'@'localhost' IDENTIFIED BY 'task123';
+
+GRANT ALL PRIVILEGES ON taskdb.* To 'usertask'@'localhost';
+
+FLUSH PRIVILEGES;
+
 CREATE TABLE IF NOT EXISTS tareas (
   id INT AUTO_INCREMENT  PRIMARY KEY,
   descripcion VARCHAR(250) NOT NULL,

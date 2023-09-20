@@ -3,7 +3,8 @@ package app.helpers;
 public enum Messages {
 	UPDATED("Updated successfully!"),
 	DELETED("Deteled successfully!"),
-	ERROR("An error has happened");
+	ERROR("An error has happened"),
+	NOT_FOUND("Record not found");
 
 	private final String value;
 
