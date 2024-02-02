@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 @Data
@@ -11,12 +13,13 @@ public class Response {
 	private final short code;
 	private final Object data;
 	private final String status;
+	@JsonProperty("mensaje")
 	private final String message;
 	private final long timestamp;
 
 	public Response(final HttpStatus code, final Object message) {
 		this.code = (short) code.value();
-		this.data = null;
+		data = null;
 		this.message = message instanceof Messages
 			? ((Messages) message).val() : message.toString();
 		status =  code.value() >= 300 ? "Error" : "OK";

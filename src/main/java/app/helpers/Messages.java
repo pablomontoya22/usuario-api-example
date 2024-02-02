@@ -4,7 +4,8 @@ public enum Messages {
 	UPDATED("Updated successfully!"),
 	DELETED("Deteled successfully!"),
 	ERROR("An error has happened"),
-	NOT_FOUND("Record not found");
+	NOT_FOUND("Record not found"),
+	CONFLICT("Duplicated record");
 
 	private final String value;
 

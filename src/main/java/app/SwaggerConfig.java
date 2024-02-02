@@ -28,8 +28,8 @@ public class SwaggerConfig {
 
 	private ApiInfo getApiInfo() {
 		return new ApiInfo(
-			"Task API",
-			"Task API Description",
+			"Usuario API",
+			"Usuario API Descripción",
 			"1.0",
 			"https://google.com",
 			new Contact("Any Company", "https://company.com", "any@google.com"),

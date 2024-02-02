@@ -1,10 +1,24 @@
-CREATE TABLE IF NOT EXISTS tareas (
-  id INT AUTO_INCREMENT  PRIMARY KEY,
-  descripcion VARCHAR(250) NOT NULL,
-  fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  vigente BOOLEAN DEFAULT true
+CREATE TABLE IF NOT EXISTS users (
+  id UUID NOT NULL DEFAULT random_uuid() PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(50) NOT NULL UNIQUE,
+  password VARCHAR(50) NOT NULL,
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_login TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  token VARCHAR(500) NOT NULL,
+  is_active BOOLEAN DEFAULT true
 );
 
-INSERT INTO tareas (descripcion, fecha_creacion, vigente) VALUES
-  ('Tarea 1', '2022-12-31 23.59.59', true),
-  ('Tarea 2', '2021-08-10 11.30.00', true);
+ALTER TABLE users
+ADD CONSTRAINT users_uq_email
+UNIQUE (email);
+
+CREATE TABLE IF NOT EXISTS phones (
+  id UUID NOT NULL DEFAULT random_uuid() PRIMARY KEY,
+  number VARCHAR(15) NOT NULL,
+  city_code VARCHAR(5) NOT NULL,
+  country_code VARCHAR(5) NOT NULL,
+  user_id UUID,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

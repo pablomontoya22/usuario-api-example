@@ -1,13 +1,18 @@
 package app;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import javax.persistence.EntityManagerFactory;
+
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,129 +25,133 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import app.controllers.TaskController;
-import app.entities.Task;
-import app.services.TaskService;
+import app.controllers.UserController;
+import app.dtos.PhoneDto;
+import app.dtos.UserDto;
+import app.handlers.JWTHandler;
+import app.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = TaskController.class, secure = false)
+@WebMvcTest(value = UserController.class, secure = false)
 public class AppTest {
 	@Autowired
 	private MockMvc mockMvc;
 
 	@MockBean
-	private TaskService taskService;
+	private UserService userService;
 
-	private final Date current = new Date(1695096098589L);
+	@MockBean
+	private JWTHandler jwtHandler;
+
+	@MockBean
+	private EntityManagerFactory entityManagerFactory;
 
 	private final ObjectMapper mapper = new ObjectMapper();
 
 	@Test
 	public void get() throws Exception {
-		final Task task = Task.builder().id(1L).descripcion("Task 1").fechaCreacion(current).vigente(true).build();
+		final UUID id = UUID.randomUUID();
+		final UserDto user = UserDto.builder().id(id).email("test@test.com").build();
 
-		Mockito.when(taskService.get(Mockito.anyLong())).thenReturn(task);
+		Mockito.when(userService.get(Mockito.any())).thenReturn(user);
 
-		final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/task/1");
+		final JSONObject body = new JSONObject();
+		body.put("id", id);
+
+		final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user").
+			contentType(MediaType.APPLICATION_JSON).content(body.toString()).accept(MediaType.APPLICATION_JSON);
 
 		final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
 		log.info(result.getResponse().getContentAsString());
 
-		final long timestamp = mapper.readTree(result.getResponse().getContentAsString()).get("timestamp").asLong();
+		final JSONObject obj = new JSONObject(result.getResponse().getContentAsString());
 
-		final String expected = String.format("{\"code\":200,\"data\":{\"id\":1,\"descripcion\":\"Task 1\","
-			+ "\"fechaCreacion\":\"2023-09-19 04:01:38\",\"vigente\":true},\"status\":\"OK\",\"message\":\"\","
-			+ "\"timestamp\":%d}", timestamp);
-
-		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+		assertEquals(obj.getJSONObject("data").get("email"), user.getEmail());
 	}
 
 	@Test
 	public void getAll() throws Exception {
-		final List<Task> tasks = new ArrayList<>();
+		final List<UserDto> users = new ArrayList<>();
 
-		tasks.add(Task.builder().id(1L).descripcion("Task 1").fechaCreacion(current).vigente(true).build());
-		tasks.add(Task.builder().id(2L).descripcion("Task 2").fechaCreacion(current).vigente(true).build());
+		users.add(UserDto.builder().email("test@a.com").build());
+		users.add(UserDto.builder().email("test@b.com").build());
 
-		Mockito.when(taskService.getAll()).thenReturn(tasks);
+		Mockito.when(userService.getAll()).thenReturn(users);
 
-		final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/task");
+		final RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user/all").
+			contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
 
 		final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
 		log.info(result.getResponse().getContentAsString());
 
-		final long timestamp = mapper.readTree(result.getResponse().getContentAsString()).get("timestamp").asLong();
+		final JSONObject obj = new JSONObject(result.getResponse().getContentAsString());
 
-		final String expected = String.format("{\"code\":200,\"data\":["
-			+ "{\"id\":1,\"descripcion\":\"Task 1\",\"fechaCreacion\":\"2023-09-19 04:01:38\",\"vigente\":true},"
-			+ "{\"id\":2,\"descripcion\":\"Task 2\",\"fechaCreacion\":\"2023-09-19 04:01:38\",\"vigente\":true}"
-			+ "],\"status\":\"OK\",\"message\":\"\",\"timestamp\":%d}", timestamp);
-
-		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+		assertEquals(obj.getJSONArray("data").getJSONObject(0).get("email"), users.get(0).getEmail());
+		assertEquals(obj.getJSONArray("data").getJSONObject(1).get("email"), users.get(1).getEmail());
 	}
 
 	@Test
 	public void save() throws Exception {
-		final Task task = Task.builder().id(10L).descripcion("New Task").fechaCreacion(current).vigente(true).build();
+		final UUID id = UUID.randomUUID();
+		final UserDto user = UserDto.builder().id(id).email("test@test.com").name("Pedro Perez").password("Abc123").
+			phones(Arrays.asList(PhoneDto.builder().cityCode("1").countryCode("2").number("55555").build())).
+			build();
 
-		Mockito.when(taskService.save(Mockito.any())).thenReturn(task);
+		Mockito.when(userService.save(Mockito.any())).thenReturn(user);
 
-		final RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/task").
-			contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(task));
+		final RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/user").
+			contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user));
 
 		final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
 		log.info(result.getResponse().getContentAsString());
 
-		final long timestamp = mapper.readTree(result.getResponse().getContentAsString()).get("timestamp").asLong();
+		final JSONObject obj = new JSONObject(result.getResponse().getContentAsString());
 
-		final String expected = String.format("{\"code\":200,\"data\":{\"id\":10,\"descripcion\":\"New Task\","
-			+ "\"fechaCreacion\":\"2023-09-19 04:01:38\",\"vigente\":true},\"status\":\"OK\",\"message\":\"\","
-			+ "\"timestamp\":%d}", timestamp);
-
-		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+		assertEquals(obj.getJSONObject("data").get("email"), user.getEmail());
 	}
 
 	@Test
 	public void update() throws Exception {
-		final Task task = Task.builder().id(1L).descripcion("Updated Task").fechaCreacion(current).vigente(true).build();
+		final UUID id = UUID.randomUUID();
+		final UserDto user = UserDto.builder().id(id).email("edited@test.com").name("Pedro Perez").password("A0c123").
+			phones(Arrays.asList(PhoneDto.builder().cityCode("1").countryCode("2").number("22222").build())).
+			build();
 
-		Mockito.when(taskService.update(Mockito.any())).thenReturn(Boolean.TRUE);
+		Mockito.when(userService.update(Mockito.any())).thenReturn(Boolean.TRUE);
 
-		final RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/task").
-			contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(task));
+		final RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user").
+			contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user));
 
 		final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
 		log.info(result.getResponse().getContentAsString());
 
-		final long timestamp = mapper.readTree(result.getResponse().getContentAsString()).get("timestamp").asLong();
+		final JSONObject obj = new JSONObject(result.getResponse().getContentAsString());
 
-		final String expected = String.format("{\"code\":200,\"data\":null,\"status\":\"OK\","
-			+ "\"message\":\"Updated successfully!\",\"timestamp\":%d}", timestamp);
-
-		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+		assertEquals(obj.get("mensaje"), "Updated successfully!");
 	}
 
 	@Test
 	public void delete() throws Exception {
-		Mockito.when(taskService.deleteById(Mockito.anyLong())).thenReturn(Boolean.TRUE);
+		Mockito.when(userService.deleteById(Mockito.any())).thenReturn(Boolean.TRUE);
 
-		final RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/task/1");
+		final JSONObject body = new JSONObject();
+		body.put("id", UUID.randomUUID());
+
+		final RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/user").
+			contentType(MediaType.APPLICATION_JSON).content(body.toString()).accept(MediaType.APPLICATION_JSON);
 
 		final MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
 		log.info(result.getResponse().getContentAsString());
 
-		final long timestamp = mapper.readTree(result.getResponse().getContentAsString()).get("timestamp").asLong();
+		final JSONObject obj = new JSONObject(result.getResponse().getContentAsString());
 
-		final String expected = String.format("{\"code\":200,\"data\":null,\"status\":\"OK\","
-			+ "\"message\":\"Deteled successfully!\",\"timestamp\":%d}", timestamp);
-
-		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+		assertEquals(obj.get("mensaje"), "Deteled successfully!");
 	}
 }

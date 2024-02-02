@@ -10,6 +10,9 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 	@Override
@@ -24,12 +27,12 @@ public class Application extends SpringBootServletInitializer {
 
     @PostConstruct
     public void stating() {
-    	System.out.println("****** Iniciando SPRING BOOT APP ******");
+    	log.info("****** Iniciando SPRING BOOT APP ******");
     }
 
     @Transactional
     @EventListener
     public void onApplicationEvent(final ContextRefreshedEvent event) {
-        System.out.println("****** Corriendo SPRING BOOT APP ******");
+    	log.info("****** Corriendo SPRING BOOT APP ******");
     }
 }
